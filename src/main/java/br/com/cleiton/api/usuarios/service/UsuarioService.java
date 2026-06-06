@@ -36,4 +36,17 @@ public class UsuarioService {
 
         return new UsuarioResponse(usuario.getId(), usuario.getEmail());
     }
+
+    public UsuarioResponse buscarPorId(Long id) {
+
+        var usuarioOptional = usuarioRepository.findById(id);
+
+        if (usuarioOptional.isEmpty()) {
+            return null;
+        }
+
+        var usuario = usuarioOptional.get();
+
+        return new UsuarioResponse(usuario.getId(), usuario.getEmail());
+    }
 }
