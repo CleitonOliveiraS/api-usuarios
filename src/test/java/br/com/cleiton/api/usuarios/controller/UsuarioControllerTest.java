@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,6 +48,9 @@ class UsuarioControllerTest {
 
         assertThat(jsonResponse).containsAnyOf("Senha deve ter no mínimo 6 caracteres.", "O campo senha não deve estar vazio ou nulo.");
 
+        Exception resolvedException = result.getResolvedException();
+        assertThat(resolvedException).isInstanceOf(MethodArgumentNotValidException.class);
+
     }
 
     @ParameterizedTest
@@ -65,6 +69,9 @@ class UsuarioControllerTest {
         String jsonResponse = result.getResponse().getContentAsString();
 
         assertThat(jsonResponse).containsAnyOf("O e-mail deve estar no formato correto.", "O campo e-mail não deve estar vazio ou nulo.");
+
+        Exception resolvedException = result.getResolvedException();
+        assertThat(resolvedException).isInstanceOf(MethodArgumentNotValidException.class);
 
     }
 

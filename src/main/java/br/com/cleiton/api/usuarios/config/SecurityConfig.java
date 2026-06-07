@@ -2,7 +2,6 @@ package br.com.cleiton.api.usuarios.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,8 +20,8 @@ public class SecurityConfig {
 
                 // 2. Configura as regras de permissão dos endpoints
                 .authorizeHttpRequests(authorize -> authorize
-                        // Libera especificamente o POST na rota /usuarios
-                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+                        // IMPORTANTE: Libera TODOS os métodos (POST, GET, PUT, DELETE) na rota /usuarios e sub-rotas
+                        .requestMatchers("/usuarios/**").permitAll()
                         .requestMatchers("/error").permitAll() // 👈 ADICIONE ISSO: Libera as respostas de erro da validação
 
                         // Exemplo: Libera qualquer requisição que comece com /publico/

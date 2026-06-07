@@ -4,11 +4,9 @@ import br.com.cleiton.api.usuarios.dto.UsuarioCadastroRequest;
 import br.com.cleiton.api.usuarios.dto.UsuarioResponse;
 import br.com.cleiton.api.usuarios.service.UsuarioService;
 import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -25,6 +23,7 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioResponse> cadastar(@RequestBody @Valid UsuarioCadastroRequest usuarioCadastroRequest) {
+
         UsuarioResponse usuario = usuarioService.cadastrar(usuarioCadastroRequest);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -33,6 +32,12 @@ public class UsuarioController {
                 .toUri();
 
         return ResponseEntity.created(uri).body(usuario);
+    }
+
+    @GetMapping("/{id}")
+    public UsuarioResponse buscarPorId(@PathVariable Long id) {
+
+        return usuarioService.buscarPorId(id);
     }
 
 }
