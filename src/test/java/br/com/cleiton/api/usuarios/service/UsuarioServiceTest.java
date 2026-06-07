@@ -3,6 +3,7 @@ package br.com.cleiton.api.usuarios.service;
 import br.com.cleiton.api.usuarios.dto.UsuarioCadastroRequest;
 import br.com.cleiton.api.usuarios.dto.UsuarioResponse;
 import br.com.cleiton.api.usuarios.exception.EmailDuplicadoException;
+import br.com.cleiton.api.usuarios.exception.ResourceNotFoundException;
 import br.com.cleiton.api.usuarios.model.Usuario;
 import br.com.cleiton.api.usuarios.repository.UsuarioRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -95,9 +96,42 @@ class UsuarioServiceTest {
 
             when(usuarioRepository.findById(Mockito.any(Long.class))).thenReturn(Optional.empty());
 
-            UsuarioResponse usuarioResponse = usuarioService.buscarPorId(999L);
+            assertThrows(ResourceNotFoundException.class, () -> {
+                usuarioService.buscarPorId(999L);
+            });
 
-            assertNull(usuarioResponse);
+        }
+
+    }
+
+    @Nested
+    class BuscarPorEmail {
+
+        @Test
+        @DisplayName("Buscar por email existente")
+        void buscarPorEmailC1() {
+
+            Usuario usuario = new Usuario(1L, "cleiton@email.com", encoder.encode("123456"));
+
+            when(usuarioRepository.findByEmail("cleiton@email.com")).thenReturn(Optional.of(usuario));
+
+            UsuarioResponse usuarioResponse = usuarioService.buscarPorEmail("cleiton@email.com");
+
+            assertNotNull(usuarioResponse);
+            assertEquals(usuario.getId(), usuarioResponse.id());
+            assertEquals(usuario.getEmail(), usuarioResponse.email());
+
+        }
+
+        @Test
+        @DisplayName("Buscar por email não existente")
+        void buscarPorEmailC2() {
+
+            when(usuarioRepository.findByEmail(Mockito.any(String.class))).thenReturn(Optional.empty());
+
+            assertThrows(ResourceNotFoundException.class, () -> {
+                usuarioService.buscarPorEmail("naoexiste@email.com");
+            });
 
         }
 
