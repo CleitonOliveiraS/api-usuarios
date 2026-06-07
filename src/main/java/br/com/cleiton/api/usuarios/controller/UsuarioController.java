@@ -5,6 +5,7 @@ import br.com.cleiton.api.usuarios.dto.UsuarioResponse;
 import br.com.cleiton.api.usuarios.service.UsuarioService;
 import jakarta.validation.Valid;
 
+import jakarta.validation.constraints.Email;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -36,8 +37,12 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public UsuarioResponse buscarPorId(@PathVariable Long id) {
-
         return usuarioService.buscarPorId(id);
+    }
+
+    @GetMapping
+    public UsuarioResponse buscarPorEmail(@RequestParam @Email String email) {
+        return usuarioService.buscarPorEmail(email);
     }
 
 }

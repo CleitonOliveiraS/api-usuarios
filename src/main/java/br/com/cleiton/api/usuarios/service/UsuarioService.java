@@ -3,6 +3,7 @@ package br.com.cleiton.api.usuarios.service;
 import br.com.cleiton.api.usuarios.dto.UsuarioCadastroRequest;
 import br.com.cleiton.api.usuarios.dto.UsuarioResponse;
 import br.com.cleiton.api.usuarios.exception.EmailDuplicadoException;
+import br.com.cleiton.api.usuarios.exception.ResourceNotFoundException;
 import br.com.cleiton.api.usuarios.model.Usuario;
 import br.com.cleiton.api.usuarios.repository.UsuarioRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -42,7 +43,20 @@ public class UsuarioService {
         var usuarioOptional = usuarioRepository.findById(id);
 
         if (usuarioOptional.isEmpty()) {
-            return null;
+            throw new ResourceNotFoundException("Nenhum usuário encontrado");
+        }
+
+        var usuario = usuarioOptional.get();
+
+        return new UsuarioResponse(usuario.getId(), usuario.getEmail());
+    }
+
+    public UsuarioResponse buscarPorEmail(String email) {
+
+        var usuarioOptional = usuarioRepository.findByEmail(email);
+
+        if (usuarioOptional.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhum usuário encontrado");
         }
 
         var usuario = usuarioOptional.get();

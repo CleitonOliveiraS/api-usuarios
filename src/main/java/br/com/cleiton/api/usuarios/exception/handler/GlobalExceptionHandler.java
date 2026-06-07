@@ -1,6 +1,7 @@
 package br.com.cleiton.api.usuarios.exception.handler;
 
 import br.com.cleiton.api.usuarios.exception.EmailDuplicadoException;
+import br.com.cleiton.api.usuarios.exception.ResourceNotFoundException;
 import br.com.cleiton.api.usuarios.exception.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(ErrorResponse.of(HttpStatus.CONFLICT, ex.getMessage()));
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse.of(HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
 
