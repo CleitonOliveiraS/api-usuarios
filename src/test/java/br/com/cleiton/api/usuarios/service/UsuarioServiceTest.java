@@ -19,7 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UsuarioServiceTest {
@@ -131,6 +131,39 @@ class UsuarioServiceTest {
 
             assertThrows(ResourceNotFoundException.class, () -> {
                 usuarioService.buscarPorEmail("naoexiste@email.com");
+            });
+
+        }
+
+    }
+
+    @Nested
+    class Deletar {
+
+        @Test
+        @DisplayName("Deletar usuário por id existente")
+        void deletarC1() {
+
+            Usuario usuario = new Usuario(1L, "cleiton@email.com", encoder.encode("123456"));
+
+            when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
+
+            usuarioService.deletar(1L);
+
+            verify(usuarioRepository, times(1)).findById(anyLong());
+            verify(usuarioRepository, times(1)).deleteById(anyLong());
+            verifyNoMoreInteractions(usuarioRepository);
+
+        }
+
+        @Test
+        @DisplayName("Deletar usuário por id não existente")
+        void deletarC2() {
+
+            when(usuarioRepository.findById(999L)).thenReturn(Optional.empty());
+
+            assertThrows(ResourceNotFoundException.class, () -> {
+                usuarioService.deletar(999L);
             });
 
         }
