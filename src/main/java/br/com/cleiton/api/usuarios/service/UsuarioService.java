@@ -14,6 +14,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder encoder;
+    private static final String NENHUM_USUARIO_ENCONTRADO = "Nenhum usuário encontrado";
 
     public UsuarioService(
             UsuarioRepository usuarioRepository,
@@ -62,5 +63,12 @@ public class UsuarioService {
         var usuario = usuarioOptional.get();
 
         return new UsuarioResponse(usuario.getId(), usuario.getEmail());
+    }
+
+    public void deletar(Long id) {
+
+        var usuario = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(NENHUM_USUARIO_ENCONTRADO));
+
+        usuarioRepository.deleteById(usuario.getId());
     }
 }
