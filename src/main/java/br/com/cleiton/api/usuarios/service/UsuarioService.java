@@ -41,26 +41,14 @@ public class UsuarioService {
 
     public UsuarioResponse buscarPorId(Long id) {
 
-        var usuarioOptional = usuarioRepository.findById(id);
-
-        if (usuarioOptional.isEmpty()) {
-            throw new ResourceNotFoundException("Nenhum usuário encontrado");
-        }
-
-        var usuario = usuarioOptional.get();
+        var usuario = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(NENHUM_USUARIO_ENCONTRADO));
 
         return new UsuarioResponse(usuario.getId(), usuario.getEmail());
     }
 
     public UsuarioResponse buscarPorEmail(String email) {
 
-        var usuarioOptional = usuarioRepository.findByEmail(email);
-
-        if (usuarioOptional.isEmpty()) {
-            throw new ResourceNotFoundException("Nenhum usuário encontrado");
-        }
-
-        var usuario = usuarioOptional.get();
+        var usuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException(NENHUM_USUARIO_ENCONTRADO));
 
         return new UsuarioResponse(usuario.getId(), usuario.getEmail());
     }
