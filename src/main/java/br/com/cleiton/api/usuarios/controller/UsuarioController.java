@@ -45,4 +45,9 @@ public class UsuarioController {
         return usuarioService.buscarPorEmail(email);
     }
 
+    @DeleteMapping("/{id}")
+    public void deletar(@PathVariable Long id) {
+        usuarioService.deletar(id);
+    }
+
 }
